@@ -1,1 +1,2 @@
-git is a version control system.
+this is my first try in ros
+to simulate the wheelchair in gazebo and make it run
