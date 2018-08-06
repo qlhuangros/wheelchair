@@ -1,0 +1,10 @@
+<launch>
+    <arg name="model1" default="/home/huang/catkin_ws/src/wheel_chair/urdf/robot2_xacro.xacro"/>
+    <arg name="rvizconfig" default="$(find urdf_tutorial)/rviz/urdf.rviz"/>
+
+    <include file="$(find wheel_chair)/launch/display1.launch">
+        <arg name="model" value="$(arg model1)"/>
+    </include>
+
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)"/>
+</launch>

@@ -1,0 +1,22 @@
+<launch>
+    <arg name="model" default="/home/huang/catkin_ws/src/wheel_chair/urdf/robot2_xacro"/>
+    <arg name="rvizconfig" default="$(find urdf_tutorial)/rviz/urdf.rviz"/>
+
+    <include file="/home/huang/catkin_ws/src/wheel_chair/launch/display1.launch">
+        <arg name="model" value="$(arg model)" />
+    </include>
+
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" />
+
+    <rosparam command="load"
+              file="/home/huang/catkin_ws/src/wheel_chair/config/diffdrive.yaml"
+              ns="wheelchair_diff_drive_controller" />
+
+    <node name="wheelchair_controller_spawner" pkg="controller_manager" type="spawner"
+        args="wheelchair_diff_drive_controller
+              --shutdown-timeout 3"/>
+
+    <node name="rqt_robot_steering" pkg="rqt_robot_steering" type="rqt_robot_steering">
+      <param name="default_topic" value="/wheelchiar_diff_drive_controller/cmd_vel"/>
+    </node>
+</launch>

@@ -1,0 +1,571 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" 
+	xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
+        xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
+        xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
+	name="robot2_xacro">
+
+    <xacro:property name="length_w1" value="0.064"/>
+    <xacro:property name="radius_w1" value="0.2032"/>
+    <xacro:property name="length_w3" value="0.052"/>
+    <xacro:property name="radius_w3" value="0.127"/>
+
+    <xacro:property name="base_size" value="0.43 0.45 0.05"/>
+    <xacro:property name="base_pos" value="0 0 0.5"/>
+
+    <xacro:property name="wheel1_pos" value="0.08 -0.057 -0.0468"/>
+    <xacro:property name="wheel2_pos" value="0.08 0.057 -0.0468"/>
+    <xacro:property name="wheel3_pos" value="-0.005 0 -0.069"/>
+    <xacro:property name="wheel4_pos" value="-0.005 0 -0.069"/>
+
+    <xacro:property name="wheel_support_size1" value="0.6 0.05 0.2"/>
+    <xacro:property name="w_s1_pos" value="0 -0.2 0.375"/>
+    <xacro:property name="w_s2_pos" value="0 0.2 0.375"/>
+    <xacro:property name="wheel_support_size2" value="0.3 0.05 0.1"/>
+    <xacro:property name="w_s3_pos" value="0.2 0 -0.15"/>
+    <xacro:property name="w_s4_pos" value="0.2 0 -0.15"/>
+
+    <xacro:property name="backrest_size" value="0.01 0.4 0.35"/>
+    <xacro:property name="backrest_pos" value="0.215 0 0.72"/>
+    <xacro:property name="backsupport_r" value="0.015"/>
+    <xacro:property name="backsupport_l" value="0.44"/>
+    <xacro:property name="backsupport1_pos" value="0.215 -0.2 0.72"/>
+    <xacro:property name="backsupport2_pos" value="0.215 0.2 0.72"/>
+    <xacro:property name="hand_l" value="0.06"/>
+    <xacro:property name="hand_r" value="0.015"/>
+    <xacro:property name="hand1_pos" value="0.03 0 0.22"/>
+    <xacro:property name="hand2_pos" value="0.03 0 0.22"/>
+
+    <xacro:property name="arm_l" value="0.4"/>
+    <xacro:property name="arm_r" value="0.015"/>
+    <xacro:property name="arm1_pos" value="0.12 0 0.15"/>
+    <xacro:property name="arm2_pos" value="0.12 0 0.15"/>
+    <xacro:property name="armsupport_l" value="0.3"/>
+    <xacro:property name="armsupport_r" value="0.015"/>
+    <xacro:property name="armsupport1_pos" value="-0.1 -0.2 0.65"/>
+    <xacro:property name="armsupport2_pos" value="-0.1 0.2 0.65"/>
+
+    <xacro:property name="spiale1_l" value="0.11"/>
+    <xacro:property name="spiale1_r" value="0.015"/>
+    <xacro:property name="spiale1_pos" value="-0.28 -0.24 0.32"/>
+    <xacro:property name="spiale2_pos" value="-0.28 0.24 0.32"/>
+    <xacro:property name="spiale3_l" value="0.138"/>
+    <xacro:property name="spiale3_r" value="0.015"/>
+    <xacro:property name="spiale3_pos" value="-0.005 0 -0.124"/>
+    <xacro:property name="spiale4_pos" value="-0.005 0 -0.124"/>
+
+    <xacro:macro name="wheel_supportb" params="w_s1 pos">
+        <link name="${w_s1}">
+            <visual>
+                <geometry>
+                    <box size="${wheel_support_size1}"/>
+                </geometry>
+                <!-- <material name="Gazebo/Grey"/> -->
+            </visual>
+            <collision>
+                <geometry>
+                    <box size="${wheel_support_size1}"/>
+                </geometry>
+            </collision>
+            <inertial>
+                <mass value="10"/>
+                <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+                          iyy="1.0" iyz="0.0"
+                          izz="1.0"/>
+            </inertial>
+        </link>
+
+        <joint name="base_to_${w_s1}" type="fixed">
+            <parent link="base_link"/>
+            <child link="${w_s1}"/>
+            <origin rpy="0 0 0" xyz="${pos}"/>
+        </joint>
+        <gazebo reference="${w_s1}">
+            <material>Gazebo/Grey</material>
+        </gazebo>
+    </xacro:macro>
+
+    <xacro:wheel_supportb w_s1="wheel_support1" pos="${w_s1_pos}"/>
+    <xacro:wheel_supportb w_s1="wheel_support2" pos="${w_s2_pos}"/>
+
+    <xacro:macro name="wheel_supportu" params="w_s2 pos supportb">
+        <link name="${w_s2}">
+            <visual>
+                <geometry>
+                    <box size="${wheel_support_size2}"/>
+                </geometry>
+                <!-- <material name="Gazebo/Grey"/> -->
+            </visual>
+            <collision>
+                <geometry>
+                    <box size="${wheel_support_size2}"/>
+                </geometry>
+            </collision>
+            <inertial>
+                 <mass value="10"/>
+                 <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+                           iyy="1.0" iyz="0.0"
+                           izz="1.0"/>
+             </inertial>
+         </link>
+
+         <gazebo reference="${w_s2}">
+             <material>Gazebo/Grey</material>
+         </gazebo>
+
+        <joint name="${supportb}_to_${w_s2}" type="fixed">
+            <parent link="${supportb}"/>
+            <child link="${w_s2}"/>
+	    <origin rpy="0 0 0" xyz="${pos}"/>
+        </joint>
+    </xacro:macro>
+
+    <xacro:wheel_supportu w_s2="wheel_support3" pos="${w_s3_pos}" supportb="wheel_support1"/>
+    <xacro:wheel_supportu w_s2="wheel_support4" pos="${w_s4_pos}" supportb="wheel_support2"/>
+
+    <link name="base_link">
+        <visual>
+            <geometry>
+                <box size="${base_size}"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="${base_pos}"/>
+            <!-- <material name="Gazebo/FlatBlack"/> -->
+        </visual>
+        <collision>
+            <geometry>
+                <box size="${base_size}"/>
+            </geometry>
+        </collision>
+        <inertial>
+                <mass value="10"/>
+                <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+                          iyy="1.0" iyz="0.0"
+                          izz="1.0"/>
+            </inertial>
+    </link>
+
+    <gazebo reference="base_link">
+        <material>Gazebo/FlatBlack</material>
+    </gazebo>
+
+    <xacro:macro name="wheelb" params="wheelname pos support">
+        <link name="${wheelname}">
+            <visual>
+                <origin xyz="0 0 0" rpy="1.5707 0 0"/>
+                <geometry>
+                    <!-- <cylinder length="${length_w1}" radius="${radius_w1}"/> -->
+                    <mesh filename="package://nuric_wheelchair_model_02/meshes/front_wheel.dae" scale="1.1953 0.9143 1.1953"/>
+                </geometry>
+                <material name="black">
+                    <color rgba="0 0 0 1"/>
+                </material>
+            </visual>
+            <collision>
+                <geometry>
+                    <cylinder length="${length_w1}" radius="${radius_w1}"/>
+                </geometry>
+            </collision>
+            <inertial>
+                <mass value="10"/>
+                <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+                          iyy="1.0" iyz="0.0"
+                          izz="1.0"/>
+            </inertial>
+        </link>
+
+        <joint name="${support}_to_${wheelname}" type="continuous">
+            <parent link="${support}"/>
+            <child link="${wheelname}"/>
+	        <origin rpy="1.5707 0 0" xyz="${pos}"/>
+	        <axis xyz="0 0 1" rpy="0 0 0"/>
+        </joint>
+    <gazebo reference="${wheelname}_${support}">
+        <mu1 value="200.0"/>
+        <mu2 value="100.0"/>
+        <kp value="10000000.0"/>
+        <kd value="1.0"/>
+        <material> Gazebo/Grey</material>
+    </gazebo>
+    </xacro:macro>
+
+    <xacro:wheelb wheelname="wheel_1" pos="${wheel1_pos}" support="wheel_support3"/>
+    <xacro:wheelb wheelname="wheel_2" pos="${wheel2_pos}" support="wheel_support4"/>
+
+    <transmission name="wheel1_swivel_trans">
+        <type>transmission_interface/SimpleTransmission</type>
+        <actuator name="wheel1_swivel_motor">
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+        <joint name="wheel_support3_to_wheel_1">
+            <hardwareInterface>VelocityJointInterface</hardwareInterface>
+        </joint>
+    </transmission>
+
+    <transmission name="wheel2_swivel_trans">
+        <type>transmission_interface/SimpleTransmission</type>
+        <actuator name="wheel2_swivel_motor">
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+        <joint name="wheel_support4_to_wheel_2">
+            <hardwareInterface>VelocityJointInterface</hardwareInterface>
+        </joint>
+    </transmission>
+
+    <xacro:macro name="wheelf" params="wheelname">
+        <link name="${wheelname}">
+            <visual>
+                <origin xyz="0 0 0" rpy="1.5707 0 0"/>
+                <geometry>
+                    <!-- <cylinder length="${length_w3}" radius="${radius_w3}"/> -->
+                    <mesh filename="package://nuric_wheelchair_model_02/meshes/front_wheel.dae" scale="0.7471 0.7429 0.7471"/>
+                </geometry>
+                <material name="black"/>
+            </visual>
+            <collision>
+                <geometry>
+                    <cylinder length="${length_w3}" radius="${radius_w3}"/>
+                </geometry>
+            </collision>
+            <inertial>
+                <mass value="10"/>
+                <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+                          iyy="1.0" iyz="0.0"
+                          izz="1.0"/>
+            </inertial>
+        </link>
+    </xacro:macro>
+
+    <xacro:wheelf wheelname="wheel_3"/>
+    <xacro:wheelf wheelname="wheel_4"/>
+
+    <link name="backrest">
+        <visual>
+            <geometry>
+                <box size="${backrest_size}"/>
+            </geometry>
+            <!-- <material name="Gazebo/FlatBlack"/> -->
+        </visual>
+        <collision>
+            <geometry>
+                <box size="${backrest_size}"/>
+            </geometry>
+        </collision>
+        <inertial>
+                <mass value="10"/>
+                <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+                          iyy="1.0" iyz="0.0"
+                          izz="1.0"/>
+            </inertial>
+    </link>
+
+    <gazebo reference="backrest">
+        <material>Gazebo/FlatBlack</material>
+    </gazebo>
+
+    <joint name="base_to_back" type="fixed">
+        <parent link="base_link"/>
+        <child link="backrest"/>
+	<origin rpy="0 0 0" xyz="${backrest_pos}"/>
+    </joint>
+
+    <xacro:macro name="backsupport" params="support_pos hand_pos support_name hand_name">
+        <link name="${support_name}">
+            <visual>
+                <geometry>
+                    <cylinder length="${backsupport_l}" radius="${backsupport_r}"/>
+                </geometry>
+                <!-- <material name="Gazebo/Grey"/> -->
+            </visual>
+            <collision>
+                <geometry>
+                    <cylinder length="${backsupport_l}" radius="${backsupport_r}"/>
+                </geometry>
+            </collision>
+            <inertial>
+                <mass value="10"/>
+                <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+                          iyy="1.0" iyz="0.0"
+                          izz="1.0"/>
+            </inertial>
+        </link>
+
+        <gazebo reference="${support_name}">
+            <material>Gazebo/Grey</material>
+        </gazebo>
+
+        <link name="${hand_name}">
+            <visual>
+                <geometry>
+                    <cylinder length="${hand_l}" radius="${hand_r}"/>
+                </geometry>
+                <!-- <material name="Gazebo/Grey"/> -->
+            </visual>
+            <collision>
+                <geometry>
+                    <cylinder length="${hand_l}" radius="${hand_r}"/>
+                </geometry>
+            </collision>
+            <inertial>
+                <mass value="10"/>
+                <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+                          iyy="1.0" iyz="0.0"
+                          izz="1.0"/>
+            </inertial>
+        </link>
+
+        <gazebo reference="${hand_name}">
+            <material>Gazebo/Grey</material>
+        </gazebo>
+
+        <joint name="base_to_${support_name}" type="fixed">
+            <parent link="base_link"/>
+            <child link="${support_name}"/>
+	    <origin rpy="0 0 0" xyz="${support_pos}"/>
+        </joint>
+
+        <joint name="${support_name}_to_${hand_name}" type="fixed">
+            <parent link="${support_name}"/>
+            <child link="${hand_name}"/>
+	    <origin rpy="0 1.5707 0" xyz="${hand_pos}"/>
+        </joint>
+    </xacro:macro>
+
+    <xacro:backsupport support_pos="${backsupport1_pos}" hand_pos="${hand1_pos}" support_name="backsupport1" hand_name="hand1"/>
+    <xacro:backsupport support_pos="${backsupport2_pos}" hand_pos="${hand2_pos}" support_name="backsupport2" hand_name="hand2"/>
+
+    <xacro:macro name="arm" params="armname armsname armpos armspos">
+        <link name="${armname}">
+            <visual>
+                <geometry>
+                    <cylinder length="${arm_l}" radius="${arm_r}"/>
+                </geometry>
+                <!-- <material name="Gazebo/White"/> -->
+            </visual>
+            <collision>
+                <geometry>
+                    <cylinder length="${arm_l}" radius="${arm_r}"/>
+                </geometry>
+            </collision>
+            <inertial>
+                <mass value="10"/>
+                <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+                          iyy="1.0" iyz="0.0"
+                          izz="1.0"/>
+            </inertial>
+        </link>
+
+        <gazebo reference="${armname}">
+            <material>Gazebo/White</material>
+        </gazebo>
+
+        <link name="${armsname}">
+            <visual>
+                <geometry>
+                    <cylinder length="${armsupport_l}" radius="${armsupport_r}"/>
+                </geometry>
+                <!-- <material name="Gazebo/White"/> -->
+            </visual>
+            <collision>
+                <geometry>
+                    <cylinder length="${armsupport_l}" radius="${armsupport_r}"/>
+                </geometry>
+            </collision>
+            <inertial>
+                <mass value="10"/>
+                <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+                          iyy="1.0" iyz="0.0"
+                          izz="1.0"/>
+            </inertial>
+        </link>
+
+        <gazebo reference="${armsname}">
+            <material>Gazebo/White</material>
+        </gazebo>
+
+        <joint name="base_to_${armsname}" type="fixed">
+            <parent link="base_link"/>
+            <child link="${armsname}"/>
+	    <origin rpy="0 0 0" xyz="${armspos}"/>
+        </joint>
+
+        <joint name="${armsname}_to_${armname}" type="fixed">
+            <parent link="${armsname}"/>
+            <child link="${armname}"/>
+	    <origin rpy="0 1.5707 0" xyz="${armpos}"/>
+        </joint>
+    </xacro:macro>
+
+    <xacro:arm armname="arm1" armsname="armsupport1" armpos="${arm1_pos}" armspos="${armsupport1_pos}"/>
+    <xacro:arm armname="arm2" armsname="armsupport2" armpos="${arm2_pos}" armspos="${armsupport2_pos}"/>
+
+    <xacro:macro name="spiale" params="spialef spiales spialefpos spialespos wheel wheelpos">
+        <link name="${spialef}">
+            <visual>
+                <geometry>
+                    <cylinder length="${spiale1_l}" radius="${spiale1_r}"/>
+                </geometry>
+                <!-- <material name="Gazebo/WhiteEmissive"/> -->
+            </visual>
+            <collision>
+                <geometry>
+                    <cylinder length="${spiale1_l}" radius="${spiale1_r}"/>
+                </geometry>
+            </collision>
+            <inertial>
+                <mass value="10"/>
+                <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+                          iyy="1.0" iyz="0.0"
+                          izz="1.0"/>
+            </inertial>
+        </link>
+
+        <gazebo reference="${spialef}">
+            <material>Gazebo/WhiteEmissive</material>
+        </gazebo>
+
+        <link name="${spiales}">
+            <visual>
+                <geometry>
+                    <cylinder length="${spiale3_l}" radius="${spiale3_r}"/>
+                </geometry>
+                <!-- <material name="Gazebo/WhiteEmissive"/> -->
+            </visual>
+            <collision>
+                <geometry>
+                    <cylinder length="${spiale3_l}" radius="${spiale3_r}"/>
+                </geometry>
+            </collision>
+            <inertial>
+                <mass value="10"/>
+                <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+                          iyy="1.0" iyz="0.0"
+                          izz="1.0"/>
+            </inertial>
+        </link>
+
+        <gazebo reference="${spiales}">
+            <material>Gazebo/WhiteEmissive</material>
+        </gazebo>
+
+        <joint name="base_to_${spialef}" type="fixed">
+            <parent link="base_link"/>
+            <child link="${spialef}"/>
+	    <origin rpy="0 0 0" xyz="${spialefpos}"/>
+        </joint>
+
+        <joint name="${spialef}_to_${spiales}" type="continuous">
+            <parent link="${spialef}"/>
+            <child link="${spiales}"/>
+	    <origin rpy="0 0.07 0" xyz="${spialespos}"/>
+	    <axis xyz="0 0 1"/>
+        </joint>
+
+        <joint name="${spiales}_to_${wheel}" type="continuous">
+            <parent link="${spiales}"/>
+            <child link="${wheel}"/>
+	    <origin rpy="1.5707 0 0" xyz="${wheelpos}"/>
+	    <axis xyz="0 0 1"/>
+        </joint>
+    </xacro:macro>
+
+    <xacro:spiale spialef="spiale_1" spiales="spiale_4" spialefpos="${spiale1_pos}" spialespos="${spiale4_pos}" wheel="wheel_4" wheelpos="${wheel4_pos}"/>
+    <xacro:spiale spialef="spiale_2" spiales="spiale_3" spialefpos="${spiale2_pos}" spialespos="${spiale3_pos}" wheel="wheel_3" wheelpos="${wheel3_pos}"/>
+
+    <link name="hokuyo_link">
+        <visual>
+            <geometry>
+                <box size="0.1 0.1 0.05"/>
+            </geometry>
+            <!-- <material name="Gazebo/RedEmissive"/> -->
+        </visual>
+        <collision>
+            <geometry>
+                <box size="0.1 0.1 0.05"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="10"/>
+            <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+                     iyy="1.0" iyz="0.0"
+                     izz="1.0"/>
+        </inertial>
+    </link>
+
+    <gazebo reference="hokuyo_link">
+        <material>Gazebo/RedEmissive</material>
+    </gazebo>
+
+    <joint name="base_to_hokuyo" type="fixed">
+        <parent link="base_link"/>
+        <child link="hokuyo_link"/>
+        <origin rpy="0 0 0" xyz="-0.1 0 0.55"/>
+    </joint>
+    <gazebo reference="hokuyo_link">
+        <sensor type="ray" name="head_hokuyo_sensor">
+            <pose>0 0 0 0 0 0</pose>
+            <visualize>true</visualize>
+            <update_rate>40</update_rate>
+            <ray>
+                <scan>
+                    <horizontal>
+                        <samples>720</samples>
+                        <resolution>1</resolution>
+                        <min_angle>-1.570796</min_angle>
+                        <max_angle>1.570796</max_angle>
+                    </horizontal>
+                </scan>
+                <range>
+                    <min>0.10</min>
+                    <max>30.0</max>
+                    <resolution>0.01</resolution>
+                </range>
+                <noise>
+                    <type>gaussian</type>
+                    <mean>0.0</mean>
+                    <stddev>0.01</stddev>
+                </noise>
+            </ray>
+            <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_laser.so">
+                <topicName>/rrbot/laser/scan</topicName>
+                <frameName>hokuyo_link</frameName>
+            </plugin>
+        </sensor>
+    </gazebo>
+
+    <gazebo>
+        <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
+	    <rosDebugLevel>Debug</rosDebugLevel>
+	    <publishWheelTF>true</publishWheelTF>
+	    <robotNamespace>/</robotNamespace>
+	    <publishTf>1</publishTf>
+	    <publishWheelJointState>true</publishWheelJointState>
+            <alwaysOn>true</alwaysOn>
+            <updateRate>100.0</updateRate>
+	    <legacyMode>true</legacyMode>
+            <leftJoint>wheel_support3_to_wheel_1</leftJoint>
+            <rightJoint>wheel_support4_to_wheel_2</rightJoint>
+            <wheelSeparation>0.114</wheelSeparation>
+            <wheelDiameter>0.4064</wheelDiameter>
+	    <broadcastTF>1</broadcastTF>
+            <torque>20</torque>
+	    <wheelAcceleration>1.8</wheelAcceleration>
+            <commandTopic>cmd_vel</commandTopic>
+            <odometryTopic>odom</odometryTopic>
+            <odometryFrame>odom</odometryFrame>
+            <robotBaseFrame>base_link</robotBaseFrame>
+        </plugin>
+    </gazebo>
+
+    <gazebo>
+        <plugin name="gazebo_ros_control"   filename="libgazebo_ros_control.so">
+            <robotNamespace>/</robotNamespace>
+
+        </plugin>
+	<plugin filename="libgazebo_ros_joint_state_publisher.so" name="joint_state_publisher">
+	  <jointName>spiale_1_to_spiale_4, spiale_2_to_spiale_3, spiale_4_to_wheel_4, spiale_3_to_wheel_3, wheel_support3_to_wheel_1, wheel_support4_to_wheel_2</jointName>
+	  <updateRate>50.0</updateRate>
+	  <alwaysOn>true</alwaysOn>
+	</plugin>
+    </gazebo>
+
+</robot>

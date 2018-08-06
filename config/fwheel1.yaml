@@ -1,0 +1,2 @@
+type: "position_controllers/JointPositionController"
+joint: spiale_3_to_wheel_3

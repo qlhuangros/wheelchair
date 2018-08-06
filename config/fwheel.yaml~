@@ -1,0 +1,6 @@
+type: "position_controllers/JointPositionController"
+joint: 
+-  spiale_1_to_spiale_4
+-  spiale_4_to_wheel_4
+-  spiale_2_to_spiale_3
+-  spiale_3_to_wheel_3

@@ -1,0 +1,47 @@
+<launch>
+    <arg name="model" default="$(find wheel_chair)/urdf/robot2_xacro.xacro"/>
+    <arg name="rvizconfig" default="$(find urdf_tutorial)/rviz/urdf.rviz"/>
+
+    <include file="$(find wheel_chair)/launch/gazebo.launch">
+        <arg name="model" value="$(arg model)" />
+    </include>
+
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)"/>
+
+    <rosparam command="load"
+              file="$(find wheel_chair)/config/joints.yaml"
+              ns="robot2_joint_state_controller" />
+    <rosparam command="load"
+              file="$(find wheel_chair)/config/fwheel.yaml"
+              ns="robot2_fwheel_controller" />
+    <rosparam command="load"
+                file="$(find wheel_chair)/config/fwheel1.yaml"
+                ns="robot2_fwheel1_controller" />
+    <rosparam command="load"
+                file="$(find wheel_chair)/config/fspiale.yaml"
+                ns="robot2_fspiale_controller" />
+    <rosparam command="load"
+                file="$(find wheel_chair)/config/fspiale1.yaml"
+                ns="robot2_fspiale1_controller" />
+    <rosparam command="load"
+		file="$(find wheel_chair)/config/wheel1.yaml"
+		ns="robot2_wheel1_controller" />
+    <rosparam command="load"
+		file="$(find wheel_chair)/config/wheel2.yaml"
+		ns="robot2_wheel2_controller" />
+    
+    <node name="robot2_controller_spawner" pkg="controller_manager" type="spawner"
+        args="robot2_joint_state_controller
+              robot2_fwheel_controller
+              robot2_fwheel1_controller
+              robot2_fspiale_controller
+              robot2_fspiale1_controller
+	      robot2_wheel1_controller
+	      robot2_wheel2_controller
+              --shutdown-timeout 3"/>
+
+    <node name="rqt_robot_steering" pkg="rqt_robot_steering" type="rqt_robot_steering">
+        <param name="default_topic" value="/robot2_wheel1_controller/cmd_vel"/>
+	<param name="default_topic1" value="/robot2_wheel2_controller/cmd_vel" />
+    </node>
+</launch>
